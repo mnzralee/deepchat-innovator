@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { ChatMessage, MessageRole, ModelSettings } from '@/types/chat';
 import { getLocalStorage, setLocalStorage } from '@/lib/localStorage';
@@ -6,7 +5,7 @@ import { toast } from 'sonner';
 
 // Default model settings
 const DEFAULT_SETTINGS: ModelSettings = {
-  model: 'deepseek-v3',
+  model: 'deepseek-chat',
   temperature: 0.7,
   max_tokens: 1024,
   top_p: 0.95,
@@ -72,6 +71,8 @@ export const useDeepseekChat = (conversationId: string) => {
         role: msg.role,
         content: msg.content,
       }));
+      
+      console.log('Sending request with model:', settings.model);
       
       // Make the actual API call to DeepSeek
       const response = await fetch('https://api.deepseek.com/v1/chat/completions', {

@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 
 // Default model settings
 const DEFAULT_SETTINGS: ModelSettings = {
-  model: 'deepseek-chat',
+  model: 'deepseek-chat', // Changed from 'deepseek-v3' to the correct model name
   temperature: 0.7,
   max_tokens: 1024,
   top_p: 0.95,

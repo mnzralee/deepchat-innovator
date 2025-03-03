@@ -70,9 +70,16 @@ const ApiKeyForm = () => {
             type="password"
           />
           
-          <div className="text-xs text-muted-foreground">
+          <div className="text-xs text-muted-foreground space-y-2">
             <p>You can get your API key from the DeepSeek dashboard.</p>
-            <p className="mt-1">Visit: <a href="https://deepseek.com/dashboard" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://deepseek.com/dashboard</a></p>
+            <p>Visit: <a href="https://platform.deepseek.com/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://platform.deepseek.com/</a></p>
+            <p className="font-medium text-amber-600">Important notes:</p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>Make sure you have a valid API key with sufficient credits</li>
+              <li>The model "deepseek-chat" should be enabled for your account</li>
+              <li>If you're getting 404 errors, verify the model name in settings</li>
+              <li>Payment or account activation may be required to use the API</li>
+            </ul>
           </div>
           
           <div className="flex justify-between">

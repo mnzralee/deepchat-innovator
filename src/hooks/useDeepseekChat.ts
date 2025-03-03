@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { ChatMessage, MessageRole, ModelSettings } from '@/types/chat';
 import { getLocalStorage, setLocalStorage } from '@/lib/localStorage';
@@ -72,7 +73,22 @@ export const useDeepseekChat = (conversationId: string) => {
         content: msg.content,
       }));
       
-      console.log('Sending request with model:', settings.model);
+      const requestBody = {
+        model: settings.model,
+        messages: apiMessages,
+        temperature: settings.temperature,
+        max_tokens: settings.max_tokens,
+        top_p: settings.top_p,
+        frequency_penalty: settings.frequency_penalty,
+        presence_penalty: settings.presence_penalty,
+      };
+      
+      console.log('Sending request to DeepSeek API with:', {
+        model: settings.model,
+        messagesCount: apiMessages.length,
+        temperature: settings.temperature,
+        apiKeyPresent: !!apiKey,
+      });
       
       // Make the actual API call to DeepSeek
       const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
@@ -81,21 +97,28 @@ export const useDeepseekChat = (conversationId: string) => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${apiKey}`,
         },
-        body: JSON.stringify({
-          model: settings.model,
-          messages: apiMessages,
-          temperature: settings.temperature,
-          max_tokens: settings.max_tokens,
-          top_p: settings.top_p,
-          frequency_penalty: settings.frequency_penalty,
-          presence_penalty: settings.presence_penalty,
-        }),
+        body: JSON.stringify(requestBody),
       });
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
-        console.error('DeepSeek API error:', errorData);
-        throw new Error(`DeepSeek API error: ${response.status} ${response.statusText}`);
+        console.error('DeepSeek API error details:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorData,
+          requestModel: settings.model
+        });
+        
+        // Custom error messages based on status code
+        if (response.status === 401) {
+          throw new Error('API key is invalid or has expired. Please check your API key.');
+        } else if (response.status === 404) {
+          throw new Error(`Model "${settings.model}" not found or API endpoint incorrect. Please check your settings or API documentation.`);
+        } else if (response.status === 402) {
+          throw new Error('Payment required. Your account may need billing information or additional credits.');
+        } else {
+          throw new Error(`DeepSeek API error: ${response.status} ${response.statusText}`);
+        }
       }
       
       const data = await response.json();

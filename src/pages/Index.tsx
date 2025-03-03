@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -6,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 import ChatMessage from '@/components/chat/ChatMessage';
 import ApiKeyForm from '@/components/chat/ApiKeyForm';
 import ModelSettings from '@/components/chat/ModelSettings';
@@ -43,11 +42,7 @@ const Index = () => {
         }
       }, 100);
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to send message. Please try again.",
-        variant: "destructive"
-      });
+      toast.error("Failed to send message. Please try again.");
     }
   };
   
@@ -69,10 +64,7 @@ const Index = () => {
 
   const handleClearChat = () => {
     clearChat();
-    toast({
-      title: "Chat cleared",
-      description: "All messages have been cleared."
-    });
+    toast.success("All messages have been cleared.");
   };
 
   return (
